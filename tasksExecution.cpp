@@ -1,7 +1,8 @@
 #include "morse.h"
 
+// Functions that perform the program main tasks
 namespace tasks {
-    // Functions that perform the program main tasks
+    
     void convert(char *inFile, char *outFile) {
         std::cout << "'convert' function is successfully called." << std::endl;
     }

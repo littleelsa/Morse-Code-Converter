@@ -8,9 +8,9 @@ std::string getErrorCode(int errorCode) {
     return "ERROR " + std::to_string(errorCode) + ": ";
 }
 
+/* Functions that log error messages to the console. */
 namespace errorsLogging {
-    /* Functions that log error messages to the console. */
-    // User's input related errors
+
     void noArgumentsProvided(int errorCode) {
         std::cout << getErrorCode(errorCode) 
                   << "No arguments were provided to the program." << std::endl;  
@@ -51,7 +51,7 @@ namespace errorsLogging {
         std::cout << getErrorCode(errorCode) 
                   << "More than 4 arguments isn't allowed." << std::endl;
     }
-    // Files' content related errors
+
     void fileNotExist(int errorCode, char fileName) {
         std::cout << getErrorCode(errorCode) 
                   << "File '" << fileName << "' doesn't exist." << std::endl;

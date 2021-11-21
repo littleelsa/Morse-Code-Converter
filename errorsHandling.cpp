@@ -2,9 +2,8 @@
 
 extern int areErrors;
 
+// Functions that detect and handle errors
 namespace errorsHandling {
-    // Functions that detect and handle errors
-    // User's input related errors
     /* Check if no arguments were included. */
     void noArgumentsProvided(int argc) {
         if (argc == 1) {
@@ -83,5 +82,4 @@ namespace errorsHandling {
             areErrors = 1;
         }
     }
-    // Files' content related errors.
 }

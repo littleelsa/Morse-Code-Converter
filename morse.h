@@ -37,8 +37,9 @@ std::vector<char *> getFileNames(int argc, char *argv[]);
 
 std::vector<char *> getCommands(int argc, char *argv[]);
 
+// Functions that log error messages to the console
 namespace errorsLogging {
-    // Functions that log error messages to the console
+    
     // User's input related errors
     void noArgumentsProvided(int errorCode);
 
@@ -56,7 +57,6 @@ namespace errorsLogging {
 
     void tooManyArguments(int errorCode);
 
-    // Files' content related errors
     void fileNotExist(int errorCode, char fileName);
 
     void unrecognizedChar(int errorCode, char c, int lineNum);
