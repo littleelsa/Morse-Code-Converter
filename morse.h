@@ -21,7 +21,7 @@ enum ERROR_CODE {
     INVALID_CODES
 };
 
-// Functions that perform micelaneous tasks
+// Functions that perform micellaneous tasks
 
 int isRecognizableCommand(char *command);
 
