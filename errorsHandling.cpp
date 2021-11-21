@@ -1,5 +1,4 @@
 #include "morse.h"
-#include "morse.h"
 
 extern int areErrors;
 
