@@ -1,5 +1,6 @@
 #include "morse.h"
 
+// Value of which will be modified by errors handling functions
 int areErrors = 0;
 
 int main(int argc, char *argv[]) {
