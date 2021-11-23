@@ -58,3 +58,39 @@ std::vector<char *> getCommands(int argc, char *argv[]) {
     }
     return commands;
 }
+
+//check input file type
+std::string Filetype(std::string filename) {
+    std::ifstream in;    
+    in.open(filename.c_str(), std::ios::in);
+    char c;
+    while(in.get(c)) {
+        if (c != '.' && c != '-' && c != '/' &&  c != ' ' && c != '\n'){
+            in.close();
+            return "plain text";
+        }
+    }
+    in.close();
+    return "morse";
+    }
+//check morse format
+bool invalid_morse_format(std::string morse_code){
+        if (morse_code.length() > 7 ){
+            return true;
+        }
+        return false;
+    }
+
+
+//error varable list 
+std::vector<std::vector<int>> ConvertError_para;
+//append the list
+void AppendError_para(std::vector<int> para){
+    ConvertError_para.push_back(para);
+}
+
+void LogConvertError(int errorCode){
+    std::cout << getErrorCode(errorCode) 
+                  << "Unrecognized morse code '" <<  ConvertError_para[0]
+                  << "' on line" << ConvertError_para[1] << '.' << std::endl; 
+}

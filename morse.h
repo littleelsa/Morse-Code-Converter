@@ -3,6 +3,8 @@
 #include <string>
 #include <vector>
 #include <cstring>
+#include <fstream>
+#include <map>
 #define NUM_FILES 2
 #define NUM_PROGRAM_COMMANDS 4
 #define MAX_NUM_ARGS 4
