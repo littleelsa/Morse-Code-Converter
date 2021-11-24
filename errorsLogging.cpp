@@ -29,12 +29,12 @@ namespace errorsLogging {
                   << "Output file name was missing from the arguments lists." << std::endl;
     }
 
-    void unrecognizedCommands(int errorCode, char *command) {
+    void unrecognizedCommands(int errorCode, std::string command) {
         std::cout << getErrorCode(errorCode) 
                   << "Unrecognized command '" << command << "'." << std::endl;
     }
 
-    void invalidCommands(int errorCode, char *command) {
+    void invalidCommands(int errorCode, std::string command) {
         std::cout << getErrorCode(errorCode)
                   << "Invalid command '" << command << "'. Commands must start with hyphens (-)." << std::endl;
     }
@@ -44,7 +44,7 @@ namespace errorsLogging {
                   << "Commands '-m' and '-t' can't be used together." << std::endl;
     }
 
-    void duplicatedArguments(int errorCode, char * command) {
+    void duplicatedArguments(int errorCode, std::string command) {
         std::cout << getErrorCode(errorCode) 
                   << "Argument '" << command << "' was included more than once." << std::endl;
     }
@@ -54,26 +54,26 @@ namespace errorsLogging {
                   << "More than 4 arguments isn't allowed." << std::endl;
     }
 
-    void fileNotExist(int errorCode, char fileName) {
+    void fileNotExist(int errorCode, std::string fileName) {
         std::cout << getErrorCode(errorCode) 
                   << "File '" << fileName << "' doesn't exist." << std::endl;
     }
 
-    void unrecognizedChars(int errorCode, char c, int lineNum) {
+    void unrecognizedChars(int errorCode, int lineNum, char c) {
         std::cout << getErrorCode(errorCode) 
                   << "Unrecognized character '" << c 
-                  << "' on line" << lineNum << '.' << std::endl;
+                  << "' on line " << lineNum << '.' << std::endl;
     }
 
-    void unrecognizedCodes(int errorCode, std::string code, int lineNum) {
+    void unrecognizedCodes(int errorCode, int lineNum, std::string code) {
         std::cout << getErrorCode(errorCode) 
                   << "Unrecognized morse code '" << code 
-                  << "' on line" << lineNum << '.' << std::endl;
+                  << "' on line " << lineNum << '.' << std::endl;
     }
 
-    void invalidCodes(int errorCode, std::string code, int lineNum) {
+    void invalidCodes(int errorCode, int lineNum, std::string code) {
         std::cout << getErrorCode(errorCode) 
                   << "Invalid morse code '" << code
-                  << "' on line" << lineNum << '.' << std::endl;
+                  << "' on line " << lineNum << '.' << std::endl;
     }
 }

@@ -27,7 +27,9 @@ int main(int argc, char *argv[]) {
     && !doesArgvIncludeCommand(argc, argv, "-m") 
     && !doesArgvIncludeCommand(argc, argv, "-t")) {
         // If input file type isn't specified, deduce type from file's content.
-        tasks::convert(fileNames[0], fileNames[1]);
+        std::string inFile = fileNames[0];
+        std::string outFile = fileNames[1];
+        tasks::convert(inFile, outFile);
     }
     for (int i = 0; i < commands.size(); i++) {
         // Perform argument-specified tasks

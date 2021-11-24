@@ -5,7 +5,7 @@ std::string programCommands[NUM_PROGRAM_COMMANDS] = {"-m", "-t", "-h", "-c"};
 // Functions that perform micellaneous tasks
 
 /* Check if argument is one of program commands */
-int isRecognizableCommand(char *command) {
+int isRecognizableCommand(std::string command) {
     for (int i = 0; i < NUM_PROGRAM_COMMANDS; i++)
         if (command == programCommands[i])
             return 1;
@@ -13,8 +13,8 @@ int isRecognizableCommand(char *command) {
 }
 
 /* Check if argument is one of program commands */
-int isValidCommand(char *command) {
-    return command[0] == '-' && isalpha(command[1]) && strlen(command) == 2;
+int isValidCommand(std::string command) {
+    return command[0] == '-' && isalpha(command[1]) && command.length() == 2;
 }
 
 /* Check if a specific command was included in the arguments list */
@@ -33,6 +33,25 @@ int countFileNames(int argc, char *argv[]) {
             fileNameCount++;
     }
     return fileNameCount;
+}
+
+/* Check if the character is a morse code character 
+('.', '-', '/', ' ', '\n') */
+int isMorseChar(char c) {
+    return c == '.' || c == '-' || c == '/' || c == ' ' || c == '\n';
+}
+
+/* Check the type of the input file */
+int getFileType(std::string fileName) {
+    std::ifstream inStream;    
+    char c;
+    inStream.open(fileName.c_str(), std::ios::in);
+    while (inStream.get(c)) {
+        if (!isMorseChar(c))
+            return PLAIN_TEXT;
+    }
+    inStream.close();
+    return MORSE_CODE;
 }
 
 /* Store file names arguments into a vector */
@@ -57,40 +76,4 @@ std::vector<char *> getCommands(int argc, char *argv[]) {
         }
     }
     return commands;
-}
-
-//check input file type
-std::string Filetype(std::string filename) {
-    std::ifstream in;    
-    in.open(filename.c_str(), std::ios::in);
-    char c;
-    while(in.get(c)) {
-        if (c != '.' && c != '-' && c != '/' &&  c != ' ' && c != '\n'){
-            in.close();
-            return "plain text";
-        }
-    }
-    in.close();
-    return "morse";
-    }
-//check morse format
-bool invalid_morse_format(std::string morse_code){
-        if (morse_code.length() > 7 ){
-            return true;
-        }
-        return false;
-    }
-
-
-//error varable list 
-std::vector<std::vector<int>> ConvertError_para;
-//append the list
-void AppendError_para(std::vector<int> para){
-    ConvertError_para.push_back(para);
-}
-
-void LogConvertError(int errorCode){
-    std::cout << getErrorCode(errorCode) 
-                  << "Unrecognized morse code '" <<  ConvertError_para[0]
-                  << "' on line" << ConvertError_para[1] << '.' << std::endl; 
 }

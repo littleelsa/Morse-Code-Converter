@@ -1,10 +1,10 @@
 #pragma once
 #include <iostream>
-#include <string>
-#include <vector>
-#include <cstring>
 #include <fstream>
 #include <map>
+#include <vector>
+#include <cctype>
+#include <cstring>
 #define NUM_FILES 2
 #define NUM_PROGRAM_COMMANDS 4
 #define MAX_NUM_ARGS 4
@@ -18,22 +18,30 @@ enum ERROR_CODE {
     DUPLICATED_ARGS,
     TOO_MANY_ARGS,
     FILE_NOT_EXIST,
-    UNRECOGNIZED_CHAR,
-    UNRECOGNIZED_CODE,
+    UNRECOGNIZED_CHARS,
+    UNRECOGNIZED_CODES,
     INVALID_CODES
+};
+enum FILE_TYPE {
+    PLAIN_TEXT,
+    MORSE_CODE
 };
 
 // Functions that perform micellaneous tasks
 
-int isRecognizableCommand(char *command);
+int isRecognizableCommand(std::string command);
+
+int isValidCommand(std::string command);
 
 int doesArgvIncludeCommand(int argc, char *argv[], std::string programCommand);
-
-int isValidCommand(char *command);
 
 int doesArgvIncludeCommand(int argc, char *argv[], std::string programCommand);
 
 int countFileNames(int argc, char *argv[]);
+
+int isMorseChar(char c);
+
+int getFileType(std::string fileName);
 
 std::vector<char *> getFileNames(int argc, char *argv[]);
 
@@ -49,23 +57,23 @@ namespace errorsLogging {
 
     void outputFileNameMissing(int errorCode);
 
-    void unrecognizedCommands(int errorCode, char *command);
+    void unrecognizedCommands(int errorCode, std::string command);
 
-    void invalidCommands(int errorCode, char *command);
+    void invalidCommands(int errorCode, std::string command);
 
     void conflictedCommands(int errorCode);
 
-    void duplicatedArguments(int errorCode, char * command);
+    void duplicatedArguments(int errorCode, std::string command);
 
     void tooManyArguments(int errorCode);
 
     void fileNotExist(int errorCode, char fileName);
 
-    void unrecognizedChar(int errorCode, char c, int lineNum);
+    void unrecognizedChars(int errorCode, int lineNum, char c);
 
-    void unrecognizedCode(int errorCode, char *code, int lineNum);
+    void unrecognizedCodes(int errorCode, int lineNum, std::string code);
 
-    void invalidCodes(int errorCode, char *code, int lineNum);
+    void invalidCodes(int errorCode, int lineNum, std::string code);
 }
 
 namespace errorsHandling {
@@ -87,11 +95,11 @@ namespace errorsHandling {
 
 namespace tasks {
 
-    void convert(char *inFile, char *outFile);
+    void convertMorse(std::string inFile, std::string outFile);
 
-    void convertMorse(char *inFile, char *outFile);
+    void convertText(std::string inFile, std::string outFile);
 
-    void convertText(char *inFile, char *outFile);
+    void convert(std::string inFile, std::string outFile);
 
     void help();
 
