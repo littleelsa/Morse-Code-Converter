@@ -1,5 +1,7 @@
 #include "morse.h"
 
+std::vector<std::vector<int>> convertErrors;
+
 std::string getErrorCode(int errorCode) {
     /* Returns the error code as a string. 
     e.g. '7' -> 'ERROR 07: ', '21' -> 'ERROR 21: '.*/
@@ -57,19 +59,19 @@ namespace errorsLogging {
                   << "File '" << fileName << "' doesn't exist." << std::endl;
     }
 
-    void unrecognizedChar(int errorCode, char c, int lineNum) {
+    void unrecognizedChars(int errorCode, char c, int lineNum) {
         std::cout << getErrorCode(errorCode) 
                   << "Unrecognized character '" << c 
                   << "' on line" << lineNum << '.' << std::endl;
     }
 
-    void unrecognizedCode(int errorCode, char *code, int lineNum) {
+    void unrecognizedCodes(int errorCode, std::string code, int lineNum) {
         std::cout << getErrorCode(errorCode) 
                   << "Unrecognized morse code '" << code 
                   << "' on line" << lineNum << '.' << std::endl;
     }
 
-    void invalidCodes(int errorCode, char *code, int lineNum) {
+    void invalidCodes(int errorCode, std::string code, int lineNum) {
         std::cout << getErrorCode(errorCode) 
                   << "Invalid morse code '" << code
                   << "' on line" << lineNum << '.' << std::endl;
