@@ -1,108 +1,10 @@
 #include "morse.h"
 
 /* A map from ASCII characters to Morse code */
-std::map<char, std::string> asciiToMorse = {
-    {'a', ".-"},
-    {'b', "-..."},
-    {'c', "-.-."},
-    {'d', "-.."},
-    {'e', "."},
-    {'f', "..-."},
-    {'g', "--."},
-    {'h', "...."},
-    {'i', ".."},
-    {'j', ".---"},
-    {'k', "-.-"},
-    {'l', ".-.."},
-    {'m', "--"},
-    {'n', "-."},
-    {'o', "---"},
-    {'p', ".--."},
-    {'q', "--.-"},
-    {'r', ".-."},
-    {'s', "..."},
-    {'t', "-"},
-    {'u', "..-"},
-    {'v', "...-"},
-    {'w', ".--"},
-    {'x', "-..-"},
-    {'y', "-.--"},
-    {'z', "--.."},
-    {'1', ".----"},
-    {'2', "..---"},
-    {'3', "...--"},
-    {'4', "....-"},
-    {'5', "....."},
-    {'6', "-...."},
-    {'7', "--..."},
-    {'8', "---.."},
-    {'9', "----."},
-    {'0', "-----"},
-    {'.', ".-.-.-"},
-    {',', "--..--"},
-    {':', "---..."},
-    {'?', "..--.."},
-    {'\'', ".----."},
-    {'-', "-....-"},
-    {'/', "-..-."},
-    {'(', "-.--."},
-    {')', "-.--.-"},
-    {'=', "-...-"},
-    {'+', ".-.-."},
-    {'@', ".--.-."},
-};
+extern std::map<char, std::string> asciiToMorse; 
 
 /* A map from Morse code to ASCII character */
-std::map<std::string, char> morseToAscii = {
-    {".-", 'a'},
-    {"-...", 'b'},
-    {"-.-.", 'c'},
-    {"-..", 'd'},
-    {".", 'e'},
-    {"..-.", 'f'},
-    {"--.", 'g'},
-    {"....", 'h'},
-    {"..", 'i'},
-    {".---", 'j'},
-    {"-.-", 'k'},
-    {".-..", 'l'},
-    {"--", 'm'},
-    {"-.", 'n'},
-    {"---", 'o'},
-    {".--.", 'p'},
-    {"--.-", 'q'},
-    {".-.", 'r'},
-    {"...", 's'},
-    {"-", 't'},
-    {"..-", 'u'},
-    {"...-", 'v'},
-    {".--", 'w'},
-    {"-..-", 'x'},
-    {"-.--", 'y'},
-    {"--..", 'z'},
-    {".----", '1'},
-    {"..---", '2'},
-    {"...--", '3'},
-    {"....-", '4'},
-    {".....", '5'},
-    {"-....", '6'},
-    {"--...", '7'},
-    {"---..", '8'},
-    {"----.", '9'},
-    {"-----", '0'},
-    {".-.-.-", '.'},
-    {"--..--", ','},
-    {"---...", ':'},
-    {"..--..", '?'},
-    {".----.", '\''},
-    {"-....-", '-'},
-    {"-..-.", '/'},
-    {"-.--.", '('},
-    {"-.--.-", ')'},
-    {"-...-", '='},
-    {".-.-.", '+'},
-    {".--.-.", '@'}
-};
+extern std::map<std::string, char> morseToAscii;
 
 // Functions that perform the program main tasks
 namespace tasks {
@@ -140,17 +42,23 @@ namespace tasks {
                     }
                     if (morseCode == "")
                         continue;    
+                    // Invalid morse code
                     if (morseCode.length() > 7) {
                         errorCount++;
                         outStream << '*';
                         // Save errors
                         errorsLogging::invalidCodes(INVALID_CODES, lineCount, morseCode);
+                        morseCode = "";
+                        continue;
                     }
-                    else if (!morseToAscii.count(morseCode)) {
+                    // Unrecognizable morse code
+                    if (!morseToAscii.count(morseCode)) {
                         errorCount++;
                         outStream << '#';
                         // Save errors
                         errorsLogging::unrecognizedCodes(UNRECOGNIZED_CODES, lineCount, morseCode);
+                        morseCode = "";
+                        continue;
                     }
                     outStream << morseToAscii[morseCode];
                     morseCode = ""; 
@@ -191,6 +99,7 @@ namespace tasks {
                     outStream << '\n';
                     break;
                 default:
+                    // Unrecognizable character
                     if (!asciiToMorse.count(tolower(c))) {
                         errorCount++;
                         outStream << '#';
