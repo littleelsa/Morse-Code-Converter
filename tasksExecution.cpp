@@ -6,6 +6,10 @@ extern std::map<char, std::string> asciiToMorse;
 /* A map from Morse code to ASCII character */
 extern std::map<std::string, char> morseToAscii;
 
+//Convert Error link list
+ConverErrorlist Errorlist;
+
+
 // Functions that perform the program main tasks
 namespace tasks {
 
@@ -48,6 +52,7 @@ namespace tasks {
                         outStream << '*';
                         // Save errors
                         errorsLogging::invalidCodes(INVALID_CODES, lineCount, morseCode);
+                        Errorlist.AppendMorseList(lineCount,morseCode);
                         morseCode = "";
                         continue;
                     }
@@ -57,6 +62,7 @@ namespace tasks {
                         outStream << '#';
                         // Save errors
                         errorsLogging::unrecognizedCodes(UNRECOGNIZED_CODES, lineCount, morseCode);
+                        Errorlist.AppendMorseList(lineCount,morseCode);
                         morseCode = "";
                         continue;
                     }
@@ -69,6 +75,7 @@ namespace tasks {
                     outStream << '*';
                     // Save errors
                     errorsLogging::unrecognizedChars(UNRECOGNIZED_CHARS, lineCount, c);
+                    Errorlist.AppendMorseList(lineCount,morseCode);
                     break;
             }
         }
@@ -105,6 +112,7 @@ namespace tasks {
                         outStream << '#';
                         // Save errors
                         errorsLogging::unrecognizedChars(UNRECOGNIZED_CHARS, lineCount, c);
+                        Errorlist.AppendTextList(lineCount,c);
                         continue;
                     }
                     outStream << asciiToMorse[tolower(c)];

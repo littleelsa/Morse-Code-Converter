@@ -12,15 +12,27 @@ int main(int argc, char *argv[]) {
     errorsHandling::conflictedCommands(argc, argv);
     errorsHandling::duplicatedArguments(argc, argv);
     errorsHandling::tooManyArguments(argc, argv);
-    if (areErrors) {
-        std::cout << "Type 'morse -h' for more help." << std::endl;
-        return 1;
-    }
+
+
 
     // Process the user's input
     std::vector<char *> fileNames = getFileNames(argc, argv);
     std::vector<char *> commands = getCommands(argc, argv);
 
+    //check input and optput file can be open or overwrite
+    errorsHandling::openInput(fileNames[0]);
+    if (areErrors) {  
+        std::cout << "Type 'morse -h' for more help." << std::endl;
+        return 1;
+    }
+
+    errorsHandling::overwriteOutput(fileNames[1]);
+    if (areErrors) {  
+        std::cout << "Type 'morse -h' for more help." << std::endl;
+        return 1;
+    }
+
+    
     // Perform the program's main tasks
     // e. g. content conversion, help message, logging, etc.
     if (fileNames.size() 
