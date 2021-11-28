@@ -56,7 +56,7 @@ int main(int argc, char *argv[]) {
             tasks::help();
             break;
         case 'c':
-            tasks::log();
+            tasks::log(fileNames[0], fileNames[1]);
             break;
         }
     }

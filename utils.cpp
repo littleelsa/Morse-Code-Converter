@@ -77,3 +77,9 @@ std::vector<char *> getCommands(int argc, char *argv[]) {
     }
     return commands;
 }
+
+std::string CurrentTime(){
+    time_t timetoday;
+    time (&timetoday);
+    return asctime(localtime(&timetoday));
+}

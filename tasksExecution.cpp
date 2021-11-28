@@ -9,16 +9,21 @@ extern std::map<std::string, char> morseToAscii;
 //Convert Error link list
 ConverErrorlist Errorlist;
 
+//Convert variable
+int CharCount = 0;
+int WordCount = 0;
+int LineCount = 1;
+int CharErrorCount = 0;
+int WordErrorCount = 0;
+bool exitWordError = false;
+
 
 // Functions that perform the program main tasks
 namespace tasks {
 
     /* Convert morse code file to plain text file */
     void convertMorse(std::string inFile, std::string outFile) {
-        int charCount = 0;
-        int wordCount = 0;
-        int lineCount = 1;
-        int errorCount = 0;
+        
         char c;
         std::string morseCode = "";
         std::ifstream inStream;    
@@ -32,50 +37,68 @@ namespace tasks {
                     morseCode += c;
                     break; 
                 case ' ': case '/': case '\n':
-                    charCount++;
+                    CharCount++;
                     switch (c) {
                         case '/':
-                            wordCount++;
-                            outStream << ' ';  
+                            WordCount++;
+                            outStream << ' ';
+                            //reset word error when come to new word
+                            exitWordError = false;  
                             break;
                         case '\n': 
-                            wordCount++;
-                            lineCount++;
+                            WordCount++;
+                            LineCount++;
                             outStream << '\n';
+                            //reset word error when come to new word
+                            exitWordError = false;
                             break;
                     }
                     if (morseCode == "")
                         continue;    
                     // Invalid morse code
                     if (morseCode.length() > 7) {
-                        errorCount++;
-                        outStream << '*';
+                        CharErrorCount++;
+                        outStream << '#';
                         // Save errors
-                        errorsLogging::invalidCodes(INVALID_CODES, lineCount, morseCode);
-                        Errorlist.AppendMorseList(lineCount,morseCode);
+                        Errorlist.AppendMorseList(LineCount,morseCode);
                         morseCode = "";
+                        // Change flag word error exist and count error word
+                        if (!exitWordError){
+                            WordErrorCount++;
+                            exitWordError = true;
+                        }
                         continue;
                     }
                     // Unrecognizable morse code
                     if (!morseToAscii.count(morseCode)) {
-                        errorCount++;
-                        outStream << '#';
+                        CharErrorCount++;
+                        outStream << '*';
                         // Save errors
-                        errorsLogging::unrecognizedCodes(UNRECOGNIZED_CODES, lineCount, morseCode);
-                        Errorlist.AppendMorseList(lineCount,morseCode);
+                        Errorlist.AppendMorseList(LineCount,morseCode);
                         morseCode = "";
+                        // Change flag word error exist and count error word
+                        if (!exitWordError){
+                            WordErrorCount++;
+                            exitWordError = true;
+                        }
                         continue;
                     }
+
                     outStream << morseToAscii[morseCode];
                     morseCode = ""; 
+
                 break;
                 default:
-                    charCount++;
-                    errorCount++;
-                    outStream << '*';
+                    CharCount++;
+                    CharErrorCount++;
+                    outStream << '#';
                     // Save errors
-                    errorsLogging::unrecognizedChars(UNRECOGNIZED_CHARS, lineCount, c);
-                    Errorlist.AppendMorseList(lineCount,morseCode);
+                    Errorlist.AppendMorseList(LineCount,morseCode);
+                    // Change flag word error not exist and count error word
+                    if (!exitWordError){
+                        WordErrorCount++;
+                        exitWordError = true;
+                        }
                     break;
             }
         }
@@ -84,35 +107,38 @@ namespace tasks {
     }
     /* Convert plain text file to morse code file */
     void convertText(std::string inFile, std::string outFile) {
-        int charCount = 0;
-        int wordCount = 0;
-        int lineCount = 1;
-        int errorCount = 0;
+        
         char c;
         std::ifstream inStream;    
         std::ofstream outStream;
         inStream.open(inFile, std::ios::in);
         outStream.open(outFile,std::ios::out);
         while (inStream.get(c)) {
-            charCount++;
+            CharCount++;
             switch (c) {
                 case ' ':
-                    wordCount++;
+                    WordCount++;
                     outStream << '/';
+                    exitWordError = false;
                     break;
                 case '\n':
-                    wordCount++;
-                    lineCount++;
+                    WordCount++;
+                    LineCount++;
                     outStream << '\n';
+                    exitWordError = false;
                     break;
                 default:
                     // Unrecognizable character
                     if (!asciiToMorse.count(tolower(c))) {
-                        errorCount++;
+                        CharErrorCount++;
                         outStream << '#';
                         // Save errors
-                        errorsLogging::unrecognizedChars(UNRECOGNIZED_CHARS, lineCount, c);
-                        Errorlist.AppendTextList(lineCount,c);
+                        Errorlist.AppendTextList(LineCount,c);
+                        // Change flag word error exist and count error word
+                        if (!exitWordError){
+                            WordErrorCount++;
+                            exitWordError = true;
+                        }
                         continue;
                     }
                     outStream << asciiToMorse[tolower(c)];
@@ -138,7 +164,23 @@ namespace tasks {
         std::cout << "'help' function is successfully called." << std::endl;
     }
 
-    void log() {
-        std::cout << "'log' function is successfully called." << std::endl;
+    void log(std::string inFile, std::string outFile) {
+        //Caculate and execute convert funciton
+        auto t_start = std::chrono::high_resolution_clock::now();
+        convert(inFile,outFile);
+        auto t_end = std::chrono::high_resolution_clock::now();
+        double duration = std::chrono::duration<double, std::milli>(t_end-t_start).count();
+        //start printing
+        std::cout << "Input file: " << inFile << std::endl;
+        std::cout << "Output file: " << outFile << std::endl;
+        std::cout << "Duration[secound]: " << duration << std::endl;
+        std::cout << "Time complete: " << CurrentTime() << std::endl;
+        std::cout << "Word count in input file: " << WordCount << std::endl;
+        std::cout << "Word converted: " << WordCount - WordErrorCount << std::endl;
+        std::cout << "Word with errors: " << WordErrorCount << std::endl;
+        std::cout << "Total number of characters: " << CharCount << std::endl;
+        std::cout << "Number of characters have been conveted: " << CharCount - CharErrorCount << std::endl;
+        std::cout << "Number of characters are NOT converted: " << CharErrorCount << std::endl;
+        Errorlist.PrintList(INVALID_CODES);
     }
 }    

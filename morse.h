@@ -5,6 +5,7 @@
 #include <vector>
 #include <cctype>
 #include <cstring>
+#include <chrono>
 #define NUM_FILES 2
 #define NUM_PROGRAM_COMMANDS 4
 #define MAX_NUM_ARGS 4
@@ -49,6 +50,7 @@ std::vector<char *> getFileNames(int argc, char *argv[]);
 
 std::vector<char *> getCommands(int argc, char *argv[]);
 
+std::string CurrentTime();
 
 
 // Functions that log error messages to the console
@@ -116,7 +118,7 @@ namespace tasks {
 
     void help();
 
-    void log();
+    void log(std::string inFile, std::string outFile);
 }
 
 struct Node {
@@ -124,6 +126,8 @@ struct Node {
     std::string errorCode;
     Node* next;
 };
+
+
 
 class ConverErrorlist {
   private:
@@ -186,6 +190,5 @@ class ConverErrorlist {
         }
       }
     }
-
 
 };
