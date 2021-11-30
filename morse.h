@@ -52,6 +52,11 @@ std::vector<char *> getCommands(int argc, char *argv[]);
 
 std::string CurrentTime();
 
+std::string charToString(char c);
+
+int wrongMorseFormat(std::string morseCode);
+
+struct convertError;
 
 // Functions that log error messages to the console
 namespace errorsLogging {
@@ -84,6 +89,8 @@ namespace errorsLogging {
     void unrecognizedCodes(int errorCode, int lineNum, std::string code);
 
     void invalidCodes(int errorCode, int lineNum, std::string code);
+
+    void convertErrors(int errorCode);
 
 }
 
@@ -119,76 +126,6 @@ namespace tasks {
     void help();
 
     void log(std::string inFile, std::string outFile);
+
+    void printConvertError(int errorCode);
 }
-
-struct Node {
-    int lineNum;
-    std::string errorCode;
-    Node* next;
-};
-
-
-
-class ConverErrorlist {
-  private:
-    Node* head;
-  public:
-    ConverErrorlist(){
-    head = NULL;
-    }
- 
-    //Add new element at the end of the list
-    //specifile for conver morse error 
-    void AppendMorseList(int lineNum,std::string errorCode) {
-      Node* newNode = new Node();
-      newNode->lineNum = lineNum;
-      newNode->errorCode = errorCode;
-      newNode->next = NULL; 
-      //if no head node, this node is head node
-      if(head == NULL) {
-        head = newNode;
-      } else {
-        Node* temp = head;
-        //append to the last
-        while(temp->next != NULL)
-          temp = temp->next;
-        //set next node to new node
-        temp->next = newNode;
-      }    
-    }
-
-    //Add new element at the end of the list
-    //specifile for conver text error 
-    void AppendTextList(int lineNum,char errorCode) {
-      Node* newNode = new Node();
-      newNode->lineNum = lineNum;
-      newNode->errorCode = errorCode;
-      newNode->next = NULL; 
-      //if no head node, this node is head node
-      if(head == NULL) {
-        head = newNode;
-      } else {
-        Node* temp = head;
-        //append to the last
-        while(temp->next != NULL)
-          temp = temp->next;
-        //set next node to new node
-        temp->next = newNode;
-      }    
-    }
-
-
-    //display the content of the list
-    void PrintList(int errorCode) {
-      Node* temp = head;
-      if(temp != NULL) { 
-        while(temp != NULL) {
-          std::cout << "Error " << errorCode
-                    << ": Invalid Morse code " << temp->errorCode
-                    << "on line " << temp->lineNum << std::endl;
-          temp = temp->next;
-        }
-      }
-    }
-
-};

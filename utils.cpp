@@ -35,11 +35,6 @@ int countFileNames(int argc, char *argv[]) {
     return fileNameCount;
 }
 
-/* Check if the character is a morse code character 
-('.', '-', '/', ' ', '\n') */
-int isMorseChar(char c) {
-    return c == '.' || c == '-' || c == '/' || c == ' ' || c == '\n';
-}
 
 /* Check the type of the input file */
 int getFileType(std::string fileName) {
@@ -47,8 +42,12 @@ int getFileType(std::string fileName) {
     char c;
     inStream.open(fileName.c_str(), std::ios::in);
     while (inStream.get(c)) {
-        if (!isMorseChar(c))
+        /* Check if the character is a morse code character 
+        ('.', '-', '/', ' ', '\n') */
+        if (c != '.' && c != '-' && c != '/' &&  c != ' ' && c!= '\n'){
+            inStream.close();
             return PLAIN_TEXT;
+        }
     }
     inStream.close();
     return MORSE_CODE;
@@ -82,4 +81,22 @@ std::string CurrentTime(){
     time_t timetoday;
     time (&timetoday);
     return asctime(localtime(&timetoday));
+}
+
+int wrongMorseFormat(std::string morseCode){
+    if (morseCode.length() > 7){
+        return 1;
+    }
+    for (int i = 0; i<morseCode.length();i++){
+        if (morseCode[i] != '-' && morseCode[i] != '.'){
+            return 1;
+        }
+    }
+    return 0;
+}
+
+std::string charToString(char c){
+    std::string s;
+    s = c;
+    return s;
 }

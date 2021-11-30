@@ -41,7 +41,8 @@ int main(int argc, char *argv[]) {
         // If input file type isn't specified, deduce type from file's content.
         std::string inFile = fileNames[0];
         std::string outFile = fileNames[1];
-        tasks::convert(inFile, outFile);
+        tasks::convert(fileNames[0],fileNames[1]);
+        
     }
     for (int i = 0; i < commands.size(); i++) {
         // Perform argument-specified tasks
@@ -60,5 +61,6 @@ int main(int argc, char *argv[]) {
             break;
         }
     }
+    tasks::printConvertError(INVALID_CODES);
     return 0;
 }

@@ -1,6 +1,5 @@
 #include "morse.h"
 
-std::vector<std::vector<int>> convertErrors;
 
 std::string getErrorCode(int errorCode) {
     /* Returns the error code as a string. 
@@ -81,12 +80,4 @@ namespace errorsLogging {
                   << "Unrecognized morse code '" << code 
                   << "' on line " << lineNum << '.' << std::endl;
     }
-
-    void invalidCodes(int errorCode, int lineNum, std::string code) {
-        std::cout << getErrorCode(errorCode) 
-                  << "Invalid morse code '" << code
-                  << "' on line " << lineNum << '.' << std::endl;
-    }
-    
-    
 }
