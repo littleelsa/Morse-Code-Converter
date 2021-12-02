@@ -1,11 +1,5 @@
 #include "morse.h"
 
-/* A map from ASCII characters to Morse code */
-extern std::map<char, std::string> asciiToMorse; 
-
-/* A map from Morse code to ASCII character */
-extern std::map<std::string, char> morseToAscii;
-
 // Functions that perform the program main tasks
 namespace tasks {
 

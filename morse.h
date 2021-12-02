@@ -27,6 +27,14 @@ enum FILE_TYPE {
     MORSE_CODE
 };
 
+extern int areErrors;
+
+/* A map from ASCII characters to Morse code */
+extern std::map<char, std::string> asciiToMorse; 
+
+/* A map from Morse code to ASCII character */
+extern std::map<std::string, char> morseToAscii;
+
 // Functions that perform micellaneous tasks
 
 int isRecognizableCommand(std::string command);

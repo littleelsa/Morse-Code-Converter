@@ -1,7 +1,5 @@
 #include "morse.h"
 
-extern int areErrors;
-
 // Functions that detect and handle errors
 namespace errorsHandling {
     /* Check if no arguments were included. */
