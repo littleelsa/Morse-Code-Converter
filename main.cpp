@@ -32,23 +32,15 @@ int main(int argc, char *argv[]) {
             tasks::convert(fileNames[0], fileNames[1]);
         }
     }
-    for (int i = 0; i < commands.size(); i++) {
-        // Perform argument-specified tasks
-        switch (commands[i][1]) {
-        case 'm':
-            tasks::convertMorse(fileNames[0], fileNames[1]);
-            break;
-        case 't':
-            tasks::convertText(fileNames[0], fileNames[1]);
-            break;
-        case 'h':
-            tasks::help();
-            break;
-        case 'c':
-            tasks::log(fileNames[0], fileNames[1]);
-            break;
-        }
-    }
+    // Perform argument-specified tasks
+    if (doesArgvIncludeCommand(argc, argv, "-m"))
+        tasks::convertMorse(fileNames[0], fileNames[1]);
+    if (doesArgvIncludeCommand(argc, argv, "-t"))
+        tasks::convertText(fileNames[0], fileNames[1]);
+    if (doesArgvIncludeCommand(argc, argv, "-h"))
+        tasks::help();
+    if (doesArgvIncludeCommand(argc, argv, "-c"))
+        tasks::log(fileNames[0], fileNames[1]);
     /*print convert error*/
     tasks::printConvertError(INVALID_CODES);
     return 0;
