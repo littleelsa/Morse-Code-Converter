@@ -1,13 +1,15 @@
 #pragma once
 #include <iostream>
+#include <chrono>
 #include <fstream>
 #include <map>
 #include <vector>
 #include <cctype>
 #include <cstring>
 #define NUM_FILES 2
-#define NUM_PROGRAM_COMMANDS 4
+#define NUM_PROGRAM_CMDS 4
 #define MAX_NUM_ARGS 4
+#define MAX_MORSE_LENGTH 7
 enum ERROR_CODE {
     NO_ERROR,
     NO_ARGS_PROVIDED,
@@ -18,6 +20,7 @@ enum ERROR_CODE {
     DUPLICATED_ARGS,
     TOO_MANY_ARGS,
     FILE_NOT_EXIST,
+    FILE_EXIST,
     UNRECOGNIZED_CHARS,
     UNRECOGNIZED_CODES,
     INVALID_CODES
@@ -27,7 +30,8 @@ enum FILE_TYPE {
     MORSE_CODE
 };
 
-extern int areErrors;
+// Value of which will be modified by input errors handling functions
+extern bool areInputErrors;
 
 /* A map from ASCII characters to Morse code */
 extern std::map<char, std::string> asciiToMorse; 
@@ -47,9 +51,15 @@ int doesArgvIncludeCommand(int argc, char *argv[], std::string programCommand);
 
 int countFileNames(int argc, char *argv[]);
 
-int isMorseChar(char c);
+int isValidMorse(std::string morse);
 
 int getFileType(std::string fileName);
+
+int doesFileExist(std::string fileName);
+
+int isYes(std::string response);
+
+int isNo(std::string response);
 
 std::vector<char *> getFileNames(int argc, char *argv[]);
 
@@ -75,7 +85,9 @@ namespace errorsLogging {
 
     void tooManyArguments(int errorCode);
 
-    void fileNotExist(int errorCode, char fileName);
+    void fileNotExist(int errorCode, std::string fileName);
+
+    void fileExist(int errorCode, std::string fileName);
 
     void unrecognizedChars(int errorCode, int lineNum, char c);
 
@@ -99,6 +111,10 @@ namespace errorsHandling {
     void duplicatedArguments(int argc, char *argv[]);
 
     void tooManyArguments(int argc, char *argv[]);
+
+    void inputFileNotExist(std::string fileName);
+
+    void outputFileExist(std::string fileName);
 }
 
 namespace tasks {

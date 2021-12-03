@@ -1,15 +1,12 @@
 #include "morse.h"
 
-extern int areErrors;
-
-
 // Functions that detect and handle errors
 namespace errorsHandling {
     /* Check if no arguments were included. */
     void noArgumentsProvided(int argc) {
         if (argc == 1) {
             errorsLogging::noArgumentsProvided(NO_ARGS_PROVIDED);
-            areErrors = 1;
+            areInputErrors = true;
         }
     }
 
@@ -26,7 +23,7 @@ namespace errorsHandling {
             // Check if '-h' was included in the arguments list. 
             // Had it not been, 2 file names must be included as arguments
             errorsLogging::fileNamesMissing(FILE_NAMES_MISSING, NUM_FILES - numFileNames);
-            areErrors = 1;
+            areInputErrors = true;
         }
     }
 
@@ -35,7 +32,7 @@ namespace errorsHandling {
         for (int i = 1; i < argc; i++) {
             if (!isRecognizableCommand(argv[i]) && isValidCommand(argv[i])) {
                 errorsLogging::unrecognizedCommands(UNRECOGNIZED_CMDS, argv[i]);
-                areErrors = 1;
+                areInputErrors = true;
                 continue;
             }
         }
@@ -51,7 +48,7 @@ namespace errorsHandling {
                     // Ignore the first two non-command arguments (file names).
                     continue;
                 errorsLogging::invalidCommands(INVALID_CMDS, argv[i]);
-                areErrors = 1;
+                areInputErrors = true;
             }
         }
     }
@@ -60,7 +57,7 @@ namespace errorsHandling {
     void conflictedCommands(int argc, char *argv[]) {
         if (doesArgvIncludeCommand(argc, argv, "-m") && doesArgvIncludeCommand(argc, argv, "-t")) {
             errorsLogging::conflictedCommands(CONFLICTED_CMDS);
-            areErrors = 1;
+            areInputErrors = true;
         }
     }
 
@@ -70,7 +67,7 @@ namespace errorsHandling {
             for (int j = i + 1; j < argc; j++) {
                 if (!strcmp(argv[i], argv[j])) {
                     errorsLogging::duplicatedArguments(DUPLICATED_ARGS, argv[i]);
-                    areErrors = 1;
+                    areInputErrors = true;
                 }
             }
         }
@@ -80,62 +77,34 @@ namespace errorsHandling {
     void tooManyArguments(int argc, char *argv[]) {
         if (argc > MAX_NUM_ARGS + 1) {
             errorsLogging::tooManyArguments(TOO_MANY_ARGS);
-            areErrors = 1;
+            areInputErrors = true;
         }
     }
 
-    //check if input file can be open or not
-    void openInput(std::string inFile){
-        std::ifstream input_stream;    
-        input_stream.open(inFile.c_str(), std::ios::in);
-        if(!input_stream){
-            errorsLogging::openInput(OPEN_INPUT,inFile);
-            areErrors = 1;
+    /* Check if the input file exists */
+    void inputFileNotExist(std::string inFile) {
+        if (!doesFileExist(inFile)) {
+            errorsLogging::fileNotExist(FILE_NOT_EXIST, inFile);
+            exit(FILE_NOT_EXIST);
         } 
-        input_stream.close();
     }
 
-    //check if output file can be overwrite or not
-    void overwriteOutput(std::string output_file_name){
-        std::ifstream tempInputFile;
-        std::string overwrite;
-        tempInputFile.open(output_file_name.c_str(), std::ios::in);
-        std::string new_output_file_name;
-        //if we can open file  - ask user to overwrite it 
-        if ( tempInputFile ){
-            std::cout << "This file already exists. Would you like to overwrite?  (Y/N):";
-            std::cin >> overwrite;
-            std::cout << std::endl ;
-            //if user dont want to overwrite, exit the program
-            if (overwrite == "N" || overwrite == "n" )
-            {
-                tempInputFile.close();
-                areErrors = 1;
-                errorsLogging::overwriteOutput(OVERWRITE_OUTPUT,output_file_name);
-                return ;
+    /* Check if the output file exists */
+    void outputFileExist(std::string outFile) {
+        std::string willOverwrite;
+        if (!doesFileExist(outFile))
+            return;
+        do {
+            std::cout << "This file has already existed. Would you like to overwrite it? (y/n): ";
+            std::cin >> willOverwrite;
+            if (isNo(willOverwrite)) {
+                errorsLogging::fileExist(FILE_EXIST, outFile);
+                exit(FILE_EXIST);
             }
-            //overwrite the file
-            else if (overwrite == "Y" || overwrite == "y"){
-                //erasing all content in that file
-                tempInputFile.close(); 
-                //empty previous output file
-                std::ofstream ofs;
-                ofs.open(output_file_name, std::ofstream::out | std::ofstream::trunc);
-                ofs.close();
-                return ;
-            }
-            else {
-                tempInputFile.close();
-                areErrors = 1;
-                errorsLogging::overwriteOutput(OVERWRITE_OUTPUT,output_file_name);
-                return ;
-            }
-        }
-        //if we cannot open a file - file does not exist - creat new file
-        else{
-            std::ofstream { output_file_name };
-            return ;
-        }
+            else if (isYes(willOverwrite))
+                return;
+            else
+                std::cout << "The response must be 'y' or 'n'." << std::endl;
+        } while (!(isYes(willOverwrite) || isNo(willOverwrite)));
     }
-
 }

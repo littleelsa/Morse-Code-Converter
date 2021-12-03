@@ -58,16 +58,10 @@ namespace errorsLogging {
                   << "File '" << fileName << "' doesn't exist." << std::endl;
     }
 
-    void openInput(int errorCode,std::string inFile){
-        std::cout << getErrorCode(errorCode)
-                  << "Cannot open input file: " << inFile << "." << std::endl;
+    void fileExist(int errorCode, std::string fileName) {
+        std::cout << getErrorCode(errorCode) 
+                  << "File '" << fileName << "' has already existed." << std::endl;
     }
-
-    void overwriteOutput(int errorCode, std::string outFile){
-        std::cout << getErrorCode(errorCode)
-                  << "Cannot ovewrite output file: " << outFile << "." << std::endl;
-    }
-
 
     void unrecognizedChars(int errorCode, int lineNum, char c) {
         std::cout << getErrorCode(errorCode) 

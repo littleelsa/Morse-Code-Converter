@@ -1,7 +1,7 @@
 #include "morse.h"
 
-// Value of which will be modified by errors handling functions
-int areErrors = 0;
+// Value of which will be modified by input errors handling functions
+bool areInputErrors = false;
 
 int main(int argc, char *argv[]) {
     // Check for possible input errors
@@ -12,7 +12,7 @@ int main(int argc, char *argv[]) {
     errorsHandling::conflictedCommands(argc, argv);
     errorsHandling::duplicatedArguments(argc, argv);
     errorsHandling::tooManyArguments(argc, argv);
-    if (areErrors) {
+    if (areInputErrors) {
         std::cout << "Type 'morse -h' for more help." << std::endl;
         return 1;
     }
@@ -23,13 +23,13 @@ int main(int argc, char *argv[]) {
 
     // Perform the program's main tasks
     // e. g. content conversion, help message, logging, etc.
-    if (fileNames.size() 
-    && !doesArgvIncludeCommand(argc, argv, "-m") 
-    && !doesArgvIncludeCommand(argc, argv, "-t")) {
-        // If input file type isn't specified, deduce type from file's content.
-        std::string inFile = fileNames[0];
-        std::string outFile = fileNames[1];
-        tasks::convert(inFile, outFile);
+    if (fileNames.size()) { 
+        // Check for possible file opening errors
+        errorsHandling::inputFileNotExist(fileNames[0]);
+        errorsHandling::outputFileExist(fileNames[1]);
+        if (!(doesArgvIncludeCommand(argc, argv, "-m") || doesArgvIncludeCommand(argc, argv, "-t"))) {
+            // If input file type isn't specified, deduce type from file's content.
+            tasks::convert(fileNames[0], fileNames[1]);
     }
     for (int i = 0; i < commands.size(); i++) {
         // Perform argument-specified tasks

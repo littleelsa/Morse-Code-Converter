@@ -1,12 +1,12 @@
 #include "morse.h"
 
-std::string programCommands[NUM_PROGRAM_COMMANDS] = {"-m", "-t", "-h", "-c"};
+std::string programCommands[NUM_PROGRAM_CMDS] = {"-m", "-t", "-h", "-c"};
 
 // Functions that perform micellaneous tasks
 
 /* Check if argument is one of program commands */
 int isRecognizableCommand(std::string command) {
-    for (int i = 0; i < NUM_PROGRAM_COMMANDS; i++)
+    for (int i = 0; i < NUM_PROGRAM_CMDS; i++)
         if (command == programCommands[i])
             return 1;
     return 0;
@@ -35,6 +35,28 @@ int countFileNames(int argc, char *argv[]) {
     return fileNameCount;
 }
 
+/* Check if a file exists */
+int doesFileExist(std::string fileName) {
+    std::ifstream file(fileName);
+    return file.good();
+}
+
+int isYes(std::string response) {
+    return response == "y" || response == "Y";
+}
+
+int isNo(std::string response) {
+    return response == "n" || response == "N";
+}
+
+int isValidMorse(std::string morseCode) {
+    if (morseCode.length() > MAX_MORSE_LENGTH)
+        return 0;
+    for (char c : morseCode)
+        if (!(c == '-' && c == '.'))
+            return 0;
+    return 1;
+}
 
 /* Check the type of the input file */
 int getFileType(std::string fileName) {
@@ -83,17 +105,7 @@ std::string CurrentTime(){
     return asctime(localtime(&timetoday));
 }
 
-int wrongMorseFormat(std::string morseCode){
-    if (morseCode.length() > 7){
-        return 1;
-    }
-    for (int i = 0; i<morseCode.length();i++){
-        if (morseCode[i] != '-' && morseCode[i] != '.'){
-            return 1;
-        }
-    }
-    return 0;
-}
+
 
 std::string charToString(char c){
     std::string s;
