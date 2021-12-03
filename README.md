@@ -27,7 +27,7 @@ In addition the input and output file's name, user can provide a range of argume
 |-|-|
 |-m|Force the program to read the input file as morse code|
 |-t|Force the program to read the input file as plain text|
-|-h|Write the instruction that aids user with using the command line arguments to the console and a helpme.txt file|
+|-h|Write the instruction that aids user with using the command line arguments to the console and a help.txt file|
 |-c|Write the information regarding the conversion process to a log file|
 
 
