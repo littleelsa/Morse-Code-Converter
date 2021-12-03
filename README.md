@@ -4,7 +4,7 @@ A command line tool to convert morse code in a text file to plain text and vice 
 Compile the program using the following command.
 
 ```
-$g++ main.cpp errorsLogging.cpp errorsHandling.cpp characterMaps.cpp utils.cpp -o morse
+g++ main.cpp errorsLogging.cpp errorsHandling.cpp characterMaps.cpp utils.cpp -o morse
 ```
 ## Usage
 The program reads input from one text file and writes output to another. User should create an input file in the same directory as the program prior to the conversion.
