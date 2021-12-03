@@ -156,6 +156,11 @@ namespace tasks {
             }
             outStream << ' ';
         }
+
+        if(inStream.peek() == EOF){
+            wordCount++;
+        }
+        
         inStream.close();
         outStream.close();
         auto t_end = std::chrono::high_resolution_clock::now();
