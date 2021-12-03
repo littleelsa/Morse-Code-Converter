@@ -30,6 +30,7 @@ int main(int argc, char *argv[]) {
         if (!(doesArgvIncludeCommand(argc, argv, "-m") || doesArgvIncludeCommand(argc, argv, "-t"))) {
             // If input file type isn't specified, deduce type from file's content.
             tasks::convert(fileNames[0], fileNames[1]);
+        }
     }
     for (int i = 0; i < commands.size(); i++) {
         // Perform argument-specified tasks
@@ -44,9 +45,11 @@ int main(int argc, char *argv[]) {
             tasks::help();
             break;
         case 'c':
-            tasks::log();
+            tasks::log(fileNames[0], fileNames[1]);
             break;
         }
     }
+    /*print convert error*/
+    tasks::printConvertError(INVALID_CODES);
     return 0;
 }

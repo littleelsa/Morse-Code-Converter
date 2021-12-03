@@ -65,6 +65,10 @@ std::vector<char *> getFileNames(int argc, char *argv[]);
 
 std::vector<char *> getCommands(int argc, char *argv[]);
 
+std::string CurrentTime();
+
+std::string charToString(char c);
+
 // Functions that log error messages to the console
 namespace errorsLogging {
     
@@ -127,5 +131,7 @@ namespace tasks {
 
     void help();
 
-    void log();
+    void log(std::string inFile, std::string outFile);
+
+    void printConvertError(int errorCode);
 }
