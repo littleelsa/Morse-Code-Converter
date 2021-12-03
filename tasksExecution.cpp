@@ -6,108 +6,130 @@ extern std::map<char, std::string> asciiToMorse;
 /* A map from Morse code to ASCII character */
 extern std::map<std::string, char> morseToAscii;
 
-// Logging informations
+struct convertError {
+    int lineNum;
+    std::string error;
+};
+
+std::vector <convertError> convertErrorList;
+
+
+
+//Convert variable
 int charCount = 0;
 int wordCount = 0;
 int lineCount = 1;
 int charErrorCount = 0;
 int wordErrorCount = 0;
-bool areWordErrors = false;
-double duration = 0;
+bool exitWordError = false;
+double Duration = 0;
 
-typedef struct conversionError {
-    int lineNum;
-    std::string error;
-} conversionError;
 
-std::vector <conversionError> conversionErrorsList;
 
-void convertMorseCode(std::string morseCode, std::ofstream &outStream) {
-    conversionError error {lineCount, morseCode};
-    if (!isValidMorse(morseCode)) {
+/*funtion to check error and convert morse code*/
+void handleMorse(std::string morseCode,std::ofstream& outStream){
+    /*reinitialize convert error*/
+    convertError error {lineCount,morseCode};
+    /*handle each condition*/
+    if (morseCode == "") {
+
+        }
+    // Invalid morse code
+    else if (wrongMorseFormat(morseCode)) {
         charErrorCount++;
+        charCount++;
         outStream << '*';
-        areWordErrors = true;
-        conversionErrorsList.push_back(error);
-        errorsLogging::invalidCodes(morseCode);
-    }
+        exitWordError = true;
+        // Save errors
+        convertErrorList.push_back(error);
+        }
+        // Unrecognizable morse code
     else if (!morseToAscii.count(morseCode)) {
         charErrorCount++;
+        charCount++;
         outStream << '#';
-        areWordErrors = true;
-        conversionErrorsList.push_back(error);
-    }
+        exitWordError = true;
+        // Save errors
+       convertErrorList.push_back(error);
+        }
     else {
+        charCount++;
         outStream << morseToAscii[morseCode];
     }
 }
 
-std::string currentTime(){
-    time_t time;
-    return asctime(localtime(&time));
-}
+
 
 // Functions that perform the program main tasks
 namespace tasks {
 
     /* Convert morse code file to plain text file */
     void convertMorse(std::string inFile, std::string outFile) {
-        auto begin = std::chrono::high_resolution_clock::now();
+        auto t_start = std::chrono::high_resolution_clock::now();
         char c;
         std::string morseCode = "";
-        std::ifstream inStream(inFile, std::ios::in);    
-        std::ofstream outStream(outFile, std::ios::out);
-        /*
+        std::ifstream inStream;    
+        std::ofstream outStream;
+        inStream.open(inFile, std::ios::in);
+        outStream.open(outFile, std::ios::out);
         // Read the input file char by char
         while (inStream.get(c)) {
-            // Keep adding char to morse code until reaching an end of word char 
-            // (e.g. ' ', '\', '/n', EOF)
-            if (!(c == ' ' || c == '/' || c == '\n' || c == EOF))
-                morseCode += c;
-                continue;
-            // Reached the end of a morse code, convert morse code
-            charCount++;
-            convertMorseCode(morseCode, outStream);
-            switch (c) {
-                case '/':
-                    wordCount++;
-                    outStream << ' ';
-                    if (areWordErrors) {
-                        wordErrorCount++;
-                        areWordErrors = false;
+            /* keep add char to morse code until reaching the end like ' ', '\', '/n' */
+            if (c!=' ' && c!='/' && c!='\n'){
+                    morseCode += c;
+                    /* if it is the end of file, start convert */
+                    if (inStream.peek() == EOF){
+                        handleMorse(morseCode,outStream);
+                        wordCount++;
+                        /* change flag variable of world error and count */
+                        if (exitWordError){
+                                wordErrorCount++;
+                                exitWordError = false;
+                            }
                     }
-                    break;
-                case '\n': 
-                    wordCount++;
-                    lineCount++;
-                    outStream << '\n';
-                    if (areWordErrors){
-                        wordErrorCount++;
-                        areWordErrors = false;
+            }
+            /* end of character, start convert */
+            else {
+                    switch (c) {
+                        case ' ':
+                            handleMorse(morseCode,outStream);
+                            break;
+                        case '/':
+                            handleMorse(morseCode,outStream);
+                            wordCount++;
+                            outStream << ' ';
+                            /* change flag variable of world error and count */
+                            if (exitWordError){
+                                wordErrorCount++;
+                                exitWordError = false;
+                            }
+                            break;
+                        case '\n': 
+                            handleMorse(morseCode,outStream);
+                            wordCount++;
+                            lineCount++;
+                            outStream << '\n';
+                            /* change flag variable of world error and count */
+                            if (exitWordError){
+                                wordErrorCount++;
+                                exitWordError = false;
+                            }
+                            break;
                     }
-                    break;
-                case EOF:
-                    wordCount++;
-                    if (areWordErrors) {
-                        wordErrorCount++;
-                        areWordErrors = false;
-                    }
-                morseCode = ""; 
+                    morseCode = ""; 
             }
         }
-        */
-
         inStream.close();
         outStream.close();
-        auto end = std::chrono::high_resolution_clock::now();
-        auto duration = std::chrono::duration<double, std::milli> (end - begin).count();
+        auto t_end = std::chrono::high_resolution_clock::now();
+        Duration = std::chrono::duration<double, std::milli>(t_end-t_start).count();
     }
     /* Convert plain text file to morse code file */
     void convertText(std::string inFile, std::string outFile) {
         /*reinitialize text error*/
     
         /*initalize varaiable*/
-        auto begin = std::chrono::high_resolution_clock::now();
+        auto t_start = std::chrono::high_resolution_clock::now();
         char c;
         std::ifstream inStream;    
         std::ofstream outStream;
@@ -145,8 +167,8 @@ namespace tasks {
         }
         inStream.close();
         outStream.close();
-        auto end = std::chrono::high_resolution_clock::now();
-        Duration = std::chrono::duration<double, std::milli>(end-begin).count();
+        auto t_end = std::chrono::high_resolution_clock::now();
+        Duration = std::chrono::duration<double, std::milli>(t_end-t_start).count();
         }
 
 
@@ -170,8 +192,8 @@ namespace tasks {
         std::cout << "Input file: " << inFile << std::endl;
         std::cout << "Output file: " << outFile << std::endl;
         std::cout << "Duration[secound]: " << Duration << std::endl;
-        std::cout << "Time complete: " << currentTime();
-        std::cout << "Word count in the input file: " << wordCount << std::endl;
+        std::cout << "Time complete: " << CurrentTime();
+        std::cout << "Word count in input file: " << wordCount << std::endl;
         std::cout << "Word converted: " << wordCount - wordErrorCount << std::endl;
         std::cout << "Word with errors: " << wordErrorCount << std::endl;
         std::cout << "Total number of characters: " << charCount << std::endl;
