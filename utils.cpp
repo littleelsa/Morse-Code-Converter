@@ -53,7 +53,7 @@ int isValidMorse(std::string morseCode) {
     if (morseCode.length() > MAX_MORSE_LENGTH)
         return 0;
     for (char c : morseCode)
-        if (!(c == '-' && c == '.'))
+        if (!(c == '-' || c == '.'))
             return 0;
     return 1;
 }
@@ -103,12 +103,4 @@ std::string CurrentTime(){
     time_t timetoday;
     time (&timetoday);
     return asctime(localtime(&timetoday));
-}
-
-
-
-std::string charToString(char c){
-    std::string s;
-    s = c;
-    return s;
 }

@@ -22,7 +22,6 @@ enum ERROR_CODE {
     FILE_NOT_EXIST,
     FILE_EXIST,
     UNRECOGNIZED_CHARS,
-    UNRECOGNIZED_CODES,
     INVALID_CODES
 };
 enum FILE_TYPE {
@@ -67,7 +66,6 @@ std::vector<char *> getCommands(int argc, char *argv[]);
 
 std::string CurrentTime();
 
-std::string charToString(char c);
 
 // Functions that log error messages to the console
 namespace errorsLogging {
@@ -133,5 +131,7 @@ namespace tasks {
 
     void log(std::string inFile, std::string outFile);
 
-    void printConvertError(int errorCode);
+    void printmorseError(int errorCode);
+
+    void printtextError(int errorCode);
 }

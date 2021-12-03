@@ -6,13 +6,21 @@ extern std::map<char, std::string> asciiToMorse;
 /* A map from Morse code to ASCII character */
 extern std::map<std::string, char> morseToAscii;
 
-struct convertError {
+
+struct morseError {
     int lineNum;
     std::string error;
 };
 
-std::vector <convertError> convertErrorList;
+std::vector <morseError> morseErrorList;
 
+
+struct textError {
+    int lineNum;
+    char error;
+};
+
+std::vector <textError> textErrorList;
 
 
 //Convert variable
@@ -28,7 +36,7 @@ double duration = 0;
 
 /*funtion to check error and convert morse code*/
 void handleMorse(std::string morseCode,std::ofstream& outStream){
-    convertError error {lineCount,morseCode};
+    morseError error {lineCount,morseCode};
     if (morseCode != ""){
         charCount++;
         if (!isValidMorse(morseCode)) {
@@ -36,14 +44,14 @@ void handleMorse(std::string morseCode,std::ofstream& outStream){
             outStream << '*';
             exitWordError = true;
             /* Save errors*/
-            convertErrorList.push_back(error);
+            morseErrorList.push_back(error);
             }
         else if (!morseToAscii.count(morseCode)) {
             charErrorCount++;
             outStream << '#';
             exitWordError = true;
             // Save errors
-            convertErrorList.push_back(error);
+            morseErrorList.push_back(error);
             }
         else {
             outStream << morseToAscii[morseCode];
@@ -69,7 +77,7 @@ namespace tasks {
         while (inStream.get(c)) {
             if (c!=' ' && c!='/' && c!='\n'){
                     morseCode += c;
-                    if (inStream.peek() == EOF){
+                    if (inStream.peek() == EOF ){
                         handleMorse(morseCode,outStream);
                         wordCount++;
                         if (exitWordError){
@@ -83,6 +91,9 @@ namespace tasks {
                     switch (c) {
                         case ' ':
                             handleMorse(morseCode,outStream);
+                            if (inStream.peek() == EOF && morseCode != ""){
+                                wordCount++;
+                            }
                             break;
                         case '/':
                             handleMorse(morseCode,outStream);
@@ -131,36 +142,44 @@ namespace tasks {
                 case ' ':
                     wordCount++;
                     outStream << '/';
+                    if (exitWordError){
+                        wordErrorCount++;
+                        exitWordError = false;
+                    }
                     break;
                 case '\n':
                     wordCount++;
                     lineCount++;
                     outStream << '\n';
+                    if (exitWordError){
+                        wordErrorCount++;
+                        exitWordError = false;
+                    }
                     break;
                 default:
                     // Unrecognizable character
                     charCount++;
                     if (!asciiToMorse.count(tolower(c))) {
                         charErrorCount++;
+                        exitWordError = true;
                         outStream << '#';
-                        std::string s;
-                        s = c;
                         /*define error (linenum, erorr code)*/
-                        convertError error{lineCount,s};
+                        textError error{lineCount,c};
                         // Save errors
-                        convertErrorList.push_back(error);
+                        textErrorList.push_back(error);
                         continue;
                     }
                     outStream << asciiToMorse[tolower(c)];
+
+                    if (inStream.peek() == EOF){
+                         wordCount++;
+                    }
+                    
                     break;
             }
             outStream << ' ';
         }
 
-        if(inStream.peek() == EOF){
-            wordCount++;
-        }
-        
         inStream.close();
         outStream.close();
         auto t_end = std::chrono::high_resolution_clock::now();
@@ -205,11 +224,20 @@ namespace tasks {
 
 
 
-    void printConvertError(int errorCode){
-        for(int i = 0; i < convertErrorList.size(); i++){
+    void printmorseError(int errorCode){
+        for(int i = 0; i < morseErrorList.size(); i++){
             std::cout << "Error " << errorCode
-                      << ": Invalid Morse code " << convertErrorList[i].error
-                      << " on line " << convertErrorList[i].lineNum << std::endl;
+                      << ": Invalid MORSE code " << morseErrorList[i].error
+                      << " on line " << morseErrorList[i].lineNum << std::endl;
         }
     }
+
+    void printtextError(int errorCode){
+        for(int i = 0; i < textErrorList.size(); i++){
+            std::cout << "Error " << errorCode
+                      << ": Unrecognize character " << textErrorList[i].error
+                      << " on line " << textErrorList[i].lineNum << std::endl;
+        }
+    }
+
 }    

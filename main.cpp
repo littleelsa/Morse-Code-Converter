@@ -42,6 +42,8 @@ int main(int argc, char *argv[]) {
     if (doesArgvIncludeCommand(argc, argv, "-c"))
         tasks::log(fileNames[0], fileNames[1]);
     /*print convert error*/
-    tasks::printConvertError(INVALID_CODES);
+    tasks::printmorseError(INVALID_CODES);
+    tasks::printtextError(UNRECOGNIZED_CHARS);
+    
     return 0;
 }
