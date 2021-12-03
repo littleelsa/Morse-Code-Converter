@@ -31,22 +31,14 @@ int main(int argc, char *argv[]) {
             // If input file type isn't specified, deduce type from file's content.
             tasks::convert(fileNames[0], fileNames[1]);
     }
-    for (int i = 0; i < commands.size(); i++) {
-        // Perform argument-specified tasks
-        switch (commands[i][1]) {
-        case 'm':
-            tasks::convertMorse(fileNames[0], fileNames[1]);
-            break;
-        case 't':
-            tasks::convertText(fileNames[0], fileNames[1]);
-            break;
-        case 'h':
-            tasks::help();
-            break;
-        case 'c':
-            tasks::log();
-            break;
-        }
-    }
+    // Perform argument-specified tasks
+    if (doesArgvIncludeCommand(argc, argv, "-m"))
+        tasks::log();
+    if (doesArgvIncludeCommand(argc, argv, "-t"))
+        tasks::log();
+    if (doesArgvIncludeCommand(argc, argv, "-h"))
+        tasks::help();
+    if (doesArgvIncludeCommand(argc, argv, "-c"))
+        tasks::log();
     return 0;
 }
