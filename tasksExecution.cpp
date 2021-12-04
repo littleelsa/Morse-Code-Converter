@@ -1,6 +1,5 @@
 #include "morse.h"
 
-<<<<<<< HEAD
 /* A map from ASCII characters to Morse code */
 extern std::map<char, std::string> asciiToMorse; 
 
@@ -62,8 +61,6 @@ void handleMorse(std::string morseCode,std::ofstream& outStream){
 
 
 
-=======
->>>>>>> khanhtran2001-main
 // Functions that perform the program main tasks
 namespace tasks {
 
