@@ -144,7 +144,10 @@ namespace tasks {
         while (inStream.get(c)) {
             switch (c) {
                 case ' ':
-                    wordCount++;
+                    if (inStream.peek() != ' ' && inStream.peek() != '\n'){
+                        wordCount++;
+                    }
+                    
                     outStream << '/';
                     if (existWordError){
                         wordErrorCount++;
@@ -152,7 +155,9 @@ namespace tasks {
                     }
                     break;
                 case '\n':
-                    wordCount++;
+                    if (inStream.peek() != ' ' && inStream.peek() != '\n'){
+                        wordCount++;
+                    }
                     lineCount++;
                     outStream << '\n';
                     if (existWordError){
@@ -238,7 +243,7 @@ namespace tasks {
 
 
 
-    void printmorseError(int errorCode){
+    void printMorseError(int errorCode){
         for(int i = 0; i < morseErrorList.size(); i++){
             std::cout << "Error " << errorCode
                       << ": Invalid MORSE code " << morseErrorList[i].error
@@ -246,7 +251,7 @@ namespace tasks {
         }
     }
 
-    void printtextError(int errorCode){
+    void printTextError(int errorCode){
         for(int i = 0; i < textErrorList.size(); i++){
             std::cout << "Error " << errorCode
                       << ": Unrecognize character " << textErrorList[i].error

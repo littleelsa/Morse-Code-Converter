@@ -138,7 +138,7 @@ namespace tasks {
 
     void log(std::string inFile, std::string outFile);
 
-    void printmorseError(int errorCode);
+    void printMorseError(int errorCode);
 
-    void printtextError(int errorCode);
+    void printTextError(int errorCode);
 }
