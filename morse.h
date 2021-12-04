@@ -29,8 +29,12 @@ enum FILE_TYPE {
     MORSE_CODE
 };
 
+<<<<<<< HEAD
 // Value of which will be modified by input errors handling functions
 extern bool areInputErrors;
+=======
+extern int areErrors;
+>>>>>>> khanhtran2001-main
 
 /* A map from ASCII characters to Morse code */
 extern std::map<char, std::string> asciiToMorse; 
