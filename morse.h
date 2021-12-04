@@ -1,11 +1,13 @@
 #pragma once
 #include <iostream>
 #include <chrono>
+#include <ctime>
 #include <fstream>
 #include <map>
 #include <vector>
 #include <cctype>
 #include <cstring>
+#include <iomanip>
 #define NUM_FILES 2
 #define NUM_PROGRAM_CMDS 4
 #define MAX_NUM_ARGS 4
@@ -65,7 +67,11 @@ std::vector<char *> getFileNames(int argc, char *argv[]);
 
 std::vector<char *> getCommands(int argc, char *argv[]);
 
+std::string removeExtention(std::string fileName);
+
 std::string CurrentTime();
+
+std::string timeLogName();
 
 
 // Functions that log error messages to the console

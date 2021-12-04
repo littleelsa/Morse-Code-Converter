@@ -29,7 +29,7 @@ int wordCount = 0;
 int lineCount = 1;
 int charErrorCount = 0;
 int wordErrorCount = 0;
-bool exitWordError = false;
+bool existWordError = false;
 double duration = 0;
 
 
@@ -42,14 +42,14 @@ void handleMorse(std::string morseCode,std::ofstream& outStream){
         if (!isValidMorse(morseCode)) {
             charErrorCount++;
             outStream << '*';
-            exitWordError = true;
+            existWordError = true;
             /* Save errors*/
             morseErrorList.push_back(error);
             }
         else if (!morseToAscii.count(morseCode)) {
             charErrorCount++;
             outStream << '#';
-            exitWordError = true;
+            existWordError = true;
             // Save errors
             morseErrorList.push_back(error);
             }
@@ -80,9 +80,9 @@ namespace tasks {
                     if (inStream.peek() == EOF ){
                         handleMorse(morseCode,outStream);
                         wordCount++;
-                        if (exitWordError){
+                        if (existWordError){
                                 wordErrorCount++;
-                                exitWordError = false;
+                                existWordError = false;
                             }
                     }
             }
@@ -97,23 +97,27 @@ namespace tasks {
                             break;
                         case '/':
                             handleMorse(morseCode,outStream);
-                            wordCount++;
+                            if (morseCode != ""){
+                                wordCount++;
+                            }
                             outStream << ' ';
                             
-                            if (exitWordError){
+                            if (existWordError){
                                 wordErrorCount++;
-                                exitWordError = false;
+                                existWordError = false;
                             }
                             break;
                         case '\n': 
                             handleMorse(morseCode,outStream);
-                            wordCount++;
+                            if (morseCode != ""){
+                                wordCount++;
+                            }
                             lineCount++;
                             outStream << '\n';
                         
-                            if (exitWordError){
+                            if (existWordError){
                                 wordErrorCount++;
-                                exitWordError = false;
+                                existWordError = false;
                             }
                             break;
                     }
@@ -142,18 +146,18 @@ namespace tasks {
                 case ' ':
                     wordCount++;
                     outStream << '/';
-                    if (exitWordError){
+                    if (existWordError){
                         wordErrorCount++;
-                        exitWordError = false;
+                        existWordError = false;
                     }
                     break;
                 case '\n':
                     wordCount++;
                     lineCount++;
                     outStream << '\n';
-                    if (exitWordError){
+                    if (existWordError){
                         wordErrorCount++;
-                        exitWordError = false;
+                        existWordError = false;
                     }
                     break;
                 default:
@@ -161,8 +165,9 @@ namespace tasks {
                     charCount++;
                     if (!asciiToMorse.count(tolower(c))) {
                         charErrorCount++;
-                        exitWordError = true;
+                        existWordError = true;
                         outStream << '#';
+                        outStream << ' ';
                         /*define error (linenum, erorr code)*/
                         textError error{lineCount,c};
                         // Save errors
@@ -207,19 +212,28 @@ namespace tasks {
 
 
     void log(std::string inFile, std::string outFile) {
+        
+        std::string infileName = removeExtention(inFile);
+        std::string outfileName = removeExtention(outFile);
+        std::string fileName = infileName + "_" + outfileName + "_" + timeLogName() + ".log";
+        /*write log file*/
+        std::ofstream outStream;
+        outStream.open(fileName,std::ios::out);
+        outStream << "Input file: " << inFile << std::endl;
+        outStream << "Output file: " << outFile << std::endl;
+        outStream << "Duration[secound]: " << duration << std::endl;
+        outStream << "Time complete: " << CurrentTime();
+        outStream << "Word count in input file: " << wordCount << std::endl;
+        outStream << "Word converted: " << wordCount - wordErrorCount << std::endl;
+        outStream << "Word with errors: " << wordErrorCount << std::endl;
+        outStream << "Total number of characters: " << charCount << std::endl;
+        outStream << "Number of characters have been conveted: " << (charCount - charErrorCount) << std::endl;
+        outStream << "Number of characters are NOT converted: " << charErrorCount << std::endl;
+        outStream << std::endl;
+        /*print log file*/
+        std::ifstream f(fileName);
+        std::cout << f.rdbuf();
 
-        //start printing
-        std::cout << "Input file: " << inFile << std::endl;
-        std::cout << "Output file: " << outFile << std::endl;
-        std::cout << "Duration[secound]: " << duration << std::endl;
-        std::cout << "Time complete: " << CurrentTime();
-        std::cout << "Word count in input file: " << wordCount << std::endl;
-        std::cout << "Word converted: " << wordCount - wordErrorCount << std::endl;
-        std::cout << "Word with errors: " << wordErrorCount << std::endl;
-        std::cout << "Total number of characters: " << charCount << std::endl;
-        std::cout << "Number of characters have been conveted: " << (charCount - charErrorCount) << std::endl;
-        std::cout << "Number of characters are NOT converted: " << charErrorCount << std::endl;
-        std::cout << std::endl;
     }
 
 
