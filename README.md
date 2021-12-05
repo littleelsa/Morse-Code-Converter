@@ -58,13 +58,13 @@ To avoid complication, program limited the number of arguments provided as many 
 |Positional arguments: [input file] [output file]                                        |
 |*positional arguments should only be omitted had the user called the '-h' command only.*|
 |                                                                                        |
-|Optionsal arguments:                                                                    |
+|Optional arguments:                                                                    |
 |  -m  | Force the program to read the input file as Morse code                          |
 |  -t  | Force the program to read the input file as plain text                          |
 |  -h  | Write the help message to the console and a help.txt file                       |
 |  -c  | Write the conversion information to a log file                                  |
 |*one shouldn't provide the program with more than 4 arguments.*                         |
-|*the '-m' and '-t commands shouldn't be used together.*                                 |
+|*the '-m' and '-t' commands shouldn't be used together.*                                 |
 +----------------------------------------------------------------------------------------+
 ```
 ### 2. Auto conversion
