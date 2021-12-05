@@ -40,7 +40,7 @@ In addition the input and output file's name, user can provide a range of argume
 ./morse inFile.txt outFile.txt -t -c
 ```
 To avoid complication, program limited the number of arguments provided as many as 4.
-## Demonstration
+## C. Demonstration
 ### 1. Help message
 [In]:
 ```
