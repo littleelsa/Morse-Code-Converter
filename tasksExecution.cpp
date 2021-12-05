@@ -45,8 +45,8 @@ const std::string helpMessage =
     "|  -t  | Force the program to read the input file as plain text                          |\n"
     "|  -h  | Write the help message to the console and a help.txt file                       |\n"
     "|  -c  | Write the conversion information to a log file                                  |\n"
-    "|*One shouldn't provide the program with more than 4 arguments.*                         |\n"
-    "|*The '-m' and '-t commands shouldn't be used together.*                                 |\n"
+    "|*one shouldn't provide the program with more than 4 arguments.*                         |\n"
+    "|*the '-m' and '-t commands shouldn't be used together.*                                 |\n"
     "+----------------------------------------------------------------------------------------+\n";
 
 /* Check for error and convert morse code */
@@ -217,7 +217,9 @@ namespace tasks {
         std::string outFileName = removeExtention(outFile);
         std::string logFileName = inFileName + "_" + outFileName + "_" + getLogTime() + ".log";
         std::ofstream outStream(logFileName, std::ios::out);
-        outStream << "Input file: " << inFile << std::endl
+        outStream << std::endl 
+                  << "\"CONVERSION INFORMATION\"" << std::endl
+                  << "Input file: " << inFile << std::endl
                   << "Output file: " << outFile << std::endl
                   << "Duration [secound]: " << conversionDuration << std::endl
                   << "Time complete: " << getCurrentTime()
@@ -226,7 +228,8 @@ namespace tasks {
                   << "Word with errors: " << wordErrorCount << std::endl
                   << "Total number of characters: " << charCount << std::endl
                   << "Number of characters have been conveted: " << (charCount - charErrorCount) << std::endl
-                  << "Number of characters have NOT been converted: " << charErrorCount << std::endl;
+                  << "Number of characters have NOT been converted: " << charErrorCount << std::endl
+                  << std::endl;
         std::ifstream file(logFileName);
         std::cout << file.rdbuf();
     }
@@ -234,7 +237,7 @@ namespace tasks {
     void logConsoleInvalid(int errorCode) {
         for(int i = 0; i < morseErrorList.size(); i++) {
             std::cout << getErrorCode(errorCode)
-                      << ": Invalid Morse code '" << morseErrorList[i].error
+                      << "Invalid Morse code '" << morseErrorList[i].error
                       << "' on line " << morseErrorList[i].lineNum << std::endl;
         }
     }
@@ -242,7 +245,7 @@ namespace tasks {
     void logConsoleUnrecognized(int errorCode) {
         for(int i = 0; i < textErrorList.size(); i++) {
             std::cout << getErrorCode(errorCode)
-                      << ": Unrecognize character '" << textErrorList[i].error
+                      << "Unrecognize character '" << textErrorList[i].error
                       << "' on line " << textErrorList[i].lineNum << std::endl;
         }
     }

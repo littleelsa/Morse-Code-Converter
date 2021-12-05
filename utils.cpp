@@ -60,13 +60,12 @@ int isValidMorse(std::string morseCode) {
 
 /* Check the type of the input file */
 int getFileType(std::string fileName) {
-    std::ifstream inStream;    
+    std::ifstream inStream(fileName.c_str(), std::ios::in);    
     char c;
-    inStream.open(fileName.c_str(), std::ios::in);
     while (inStream.get(c)) {
         /* Check if the character is a morse code character 
-        ('.', '-', '/', ' ', '\n') */
-        if (c != '.' && c != '-' && c != '/' &&  c != ' ' && c!= '\n'){
+        ('.', '-', '/', ' ', '\n', '*', '#') */
+        if (c != '.' && c != '-' && c != '/' &&  c != ' ' && c != '\n') {
             inStream.close();
             return PLAIN_TEXT;
         }
