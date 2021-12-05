@@ -6,6 +6,7 @@ int wordCount = 0;
 int lineCount = 1;
 int charErrorCount = 0;
 int wordErrorCount = 0;
+bool existWord = false;
 bool existWordError = false;
 double conversionDuration = 0;
 
@@ -69,9 +70,13 @@ namespace tasks {
         while (inStream.get(c)) {
             if (c!=' ' && c!='/' && c!='\n') {
                     morseCode += c;
+                    existWord = true;
                     if (inStream.peek() == EOF) {
                         handleMorse(morseCode,outStream);
-                        wordCount++;
+                        if (existWord){
+                            wordCount++;
+                            existWord = false;
+                        }
                         if (existWordError) {
                                 wordErrorCount++;
                                 existWordError = false;
@@ -84,13 +89,17 @@ namespace tasks {
                     case ' ':
                         handleMorse(morseCode, outStream);
                         if (inStream.peek() == EOF && morseCode != "") {
+                            if (existWord){
                             wordCount++;
+                            existWord = false;
+                            }
                         }
                         break;
                     case '/':
                         handleMorse(morseCode, outStream);
-                        if (morseCode != "") {
+                        if (existWord){
                             wordCount++;
+                            existWord = false;
                         }
                         outStream << ' ';
                         
@@ -101,8 +110,9 @@ namespace tasks {
                         break;
                     case '\n': 
                         handleMorse(morseCode, outStream);
-                        if (morseCode != "") {
+                        if (existWord){
                             wordCount++;
+                            existWord = false;
                         }
                         lineCount++;
                         outStream << '\n';
@@ -131,9 +141,10 @@ namespace tasks {
         while (inStream.get(c)) {
             switch (c) {
                 case ' ':
-                    if (inStream.peek() != ' ' && inStream.peek() != '\n') {
-                        wordCount++;
-                    }
+                    if (existWord){
+                            wordCount++;
+                            existWord = false;
+                        }
                     
                     outStream << '/';
                     if (existWordError) {
@@ -142,9 +153,11 @@ namespace tasks {
                     }
                     break;
                 case '\n':
-                    if (inStream.peek() != ' ' && inStream.peek() != '\n') {
-                        wordCount++;
-                    }
+                    if (existWord){
+                            wordCount++;
+                            existWord = false;
+                        }
+                        
                     lineCount++;
                     outStream << '\n';
                     if (existWordError) {
@@ -155,6 +168,7 @@ namespace tasks {
                 default:
                     // Unrecognizable character
                     charCount++;
+                    existWord = true;
                     if (!asciiToMorse.count(tolower(c))) {
                         charErrorCount++;
                         existWordError = true;
