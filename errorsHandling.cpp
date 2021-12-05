@@ -97,14 +97,14 @@ namespace errorsHandling {
         do {
             std::cout << "This file has already existed. Would you like to overwrite it? (y/n): ";
             std::cin >> willOverwrite;
-            if (isNo(willOverwrite)) {
+            if (isResponseNo(willOverwrite)) {
                 errorsLogging::fileExist(FILE_EXIST, outFile);
                 exit(FILE_EXIST);
             }
-            else if (isYes(willOverwrite))
+            else if (isResponseYes(willOverwrite))
                 return;
             else
                 std::cout << "The response must be 'y' or 'n'." << std::endl;
-        } while (!(isYes(willOverwrite) || isNo(willOverwrite)));
+        } while (!(isResponseYes(willOverwrite) || isResponseNo(willOverwrite)));
     }
 }

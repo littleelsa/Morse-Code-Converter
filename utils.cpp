@@ -29,7 +29,7 @@ int doesArgvIncludeCommand(int argc, char *argv[], std::string programCommand) {
 int countFileNames(int argc, char *argv[]) {
     int fileNameCount = 0;
     for (int i = 1; i < argc; i++) {
-        if (!isRecognizableCommand(argv[i]))
+        if (!isValidCommand(argv[i]))
             fileNameCount++;
     }
     return fileNameCount;
@@ -41,11 +41,11 @@ int doesFileExist(std::string fileName) {
     return file.good();
 }
 
-int isYes(std::string response) {
+int isResponseYes(std::string response) {
     return response == "y" || response == "Y";
 }
 
-int isNo(std::string response) {
+int isResponseNo(std::string response) {
     return response == "n" || response == "N";
 }
 
@@ -97,26 +97,4 @@ std::vector<char *> getCommands(int argc, char *argv[]) {
         }
     }
     return commands;
-}
-
-std::string removeExtention(std::string fileName){
-    size_t lastdot = fileName.find_last_of(".");
-    if (lastdot == std::string::npos)
-        return fileName;
-    return fileName.substr(0,lastdot);
-}
-
-std::string CurrentTime(){
-    time_t timetoday;
-    time (&timetoday);
-    return asctime(localtime(&timetoday));
-}
-
-std::string timeLogName(){
-    auto t = std::time(nullptr);
-    auto tm = *std::localtime(&t);
-    std::ostringstream oss;
-    oss << std::put_time(&tm, "%d%m%Y_%H%m%S");
-    auto str = oss.str();
-    return str;
 }

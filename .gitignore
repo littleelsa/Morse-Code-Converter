@@ -1,3 +1,5 @@
 .vscode/
 morse
+morse.exe
 *.txt
+*.log

@@ -43,6 +43,8 @@ extern std::map<std::string, char> morseToAscii;
 
 // Functions that perform micellaneous tasks
 
+std::string getErrorCode(int errorCode);
+
 int isRecognizableCommand(std::string command);
 
 int isValidCommand(std::string command);
@@ -59,20 +61,13 @@ int getFileType(std::string fileName);
 
 int doesFileExist(std::string fileName);
 
-int isYes(std::string response);
+int isResponseYes(std::string response);
 
-int isNo(std::string response);
+int isResponseNo(std::string response);
 
 std::vector<char *> getFileNames(int argc, char *argv[]);
 
 std::vector<char *> getCommands(int argc, char *argv[]);
-
-std::string removeExtention(std::string fileName);
-
-std::string CurrentTime();
-
-std::string timeLogName();
-
 
 // Functions that log error messages to the console
 namespace errorsLogging {
@@ -136,9 +131,9 @@ namespace tasks {
 
     void help();
 
-    void log(std::string inFile, std::string outFile);
+    void logFile(std::string inFile, std::string outFile);
 
-    void printMorseError(int errorCode);
+    void logConsoleInvalid(int errorCode);
 
-    void printTextError(int errorCode);
+    void logConsoleUnrecognized(int errorCode);
 }

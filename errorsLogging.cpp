@@ -1,6 +1,5 @@
 #include "morse.h"
 
-
 std::string getErrorCode(int errorCode) {
     /* Returns the error code as a string. 
     e.g. '7' -> 'ERROR 07: ', '21' -> 'ERROR 21: '.*/
@@ -61,17 +60,5 @@ namespace errorsLogging {
     void fileExist(int errorCode, std::string fileName) {
         std::cout << getErrorCode(errorCode) 
                   << "File '" << fileName << "' has already existed." << std::endl;
-    }
-
-    void unrecognizedChars(int errorCode, int lineNum, char c) {
-        std::cout << getErrorCode(errorCode) 
-                  << "Unrecognized character '" << c 
-                  << "' on line " << lineNum << '.' << std::endl;
-    }
-
-    void unrecognizedCodes(int errorCode, int lineNum, std::string code) {
-        std::cout << getErrorCode(errorCode) 
-                  << "Unrecognized morse code '" << code 
-                  << "' on line " << lineNum << '.' << std::endl;
     }
 }

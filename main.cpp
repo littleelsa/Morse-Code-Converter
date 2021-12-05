@@ -13,7 +13,7 @@ int main(int argc, char *argv[]) {
     errorsHandling::duplicatedArguments(argc, argv);
     errorsHandling::tooManyArguments(argc, argv);
     if (areInputErrors) {
-        std::cout << "Type 'morse -h' for more help." << std::endl;
+        std::cout << "Type './morse -h' for more help." << std::endl;
         return 1;
     }
 
@@ -40,10 +40,10 @@ int main(int argc, char *argv[]) {
     if (doesArgvIncludeCommand(argc, argv, "-h"))
         tasks::help();
     if (doesArgvIncludeCommand(argc, argv, "-c"))
-        tasks::log(fileNames[0], fileNames[1]);
-    /*print convert error*/
-    tasks::printMorseError(INVALID_CODES);
-    tasks::printTextError(UNRECOGNIZED_CHARS);
+        tasks::logFile(fileNames[0], fileNames[1]);
+    // Log the conversion information to the console
+    tasks::logConsoleInvalid(INVALID_CODES);
+    tasks::logConsoleUnrecognized(UNRECOGNIZED_CHARS);
     
     return 0;
 }
